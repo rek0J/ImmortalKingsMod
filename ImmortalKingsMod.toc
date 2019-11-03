@@ -1,12 +1,12 @@
 ## Interface: 80205
-## Title: WowAddonTest
+## Title: ImmortalKingsMod
 ## Version: 1.0
 ## Author: rek0
+# SavedVariables: ImmortalKingsModDB
 
 embeds.xml
-WowAddonTest.lua
+ImmortalKingsMod.lua
 
 #testing
 Module\CritSound.lua
 Module\RaidBossKill.lua
-Database\db.lua

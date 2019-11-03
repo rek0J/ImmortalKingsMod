@@ -15,10 +15,10 @@
 	<!--<Include file="Libs\AceComm-3.0\AceComm-3.0.xml"/>-->
 	<!--<Include file="Libs\AceTab-3.0\AceTab-3.0.xml"/>-->
 	<!--<Include file="Libs\AceSerializer-3.0\AceSerializer-3.0.xml"/>-->
-	<Frame name="WowAddonTestFrame">
+	<Frame name="ImmortalKingsXMLFrame">
 		<Scripts>
 			<OnLoad></OnLoad>
-			<OnEvent>WowAddonTest_CritSound:EventManager(self, event, ...);WowAddonTest_RaidBossKill:EventManager(self, event, ...);</OnEvent>
+			<OnEvent>ImmortalKingsMod_CritSound:EventManager(self, event, ...);ImmortalKingsMod_RaidBossKill:EventManager(self, event, ...);</OnEvent>
 		</Scripts>
 	</Frame>
 </Ui>

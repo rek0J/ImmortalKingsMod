@@ -1,15 +1,15 @@
-local AddOnName, WATEngine = ...
+local AddOnName, IKMEngine = ...
 
 -- Author      : rek0
 -- Create Date : 10/24/2019 11:00:38 PM
 
-WowAddonTest = LibStub("AceAddon-3.0"):GetAddon("WowAddonTest")
-WowAddonTest_CritSound = WowAddonTest:NewModule("CritSound", "AceEvent-3.0", "AceHook-3.0")
-WowAddonTest_CritSound.description = "Adds a Sound to each Crit."
+ImmortalKingsMod = LibStub("AceAddon-3.0"):GetAddon("ImmortalKingsMod")
+ImmortalKingsMod_CritSound = ImmortalKingsMod:NewModule("CritSound", "AceEvent-3.0", "AceHook-3.0")
+ImmortalKingsMod_CritSound.description = "Adds a Sound to each Crit."
 
 -- Um das addon von anfang an zu starten
---if WATDBMCS.State then
---	WowAddonTest_CritSound:Enable()
+--if IKMDBMCS.State then
+--	ImmortalKingsMod_CritSound:Enable()
 --	print("aktiv")
 --else
 --	print("not aktiv")
@@ -22,36 +22,37 @@ WowAddonTest_CritSound.description = "Adds a Sound to each Crit."
 	
 local UnitGUID = UnitGUID
 local playerID = UnitGUID("player")
-local tab = 1
 
 
-function WowAddonTest_CritSound:OnEnable()
+function ImmortalKingsMod_CritSound:OnEnable()
 		print("modul critsound aktiviert123")
-		WowAddonTestFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-		WowAddonTestFrame:RegisterEvent("UNIT_PET", "player")
+		ImmortalKingsXMLFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		ImmortalKingsXMLFrame:RegisterEvent("UNIT_PET", "player")
 		--DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff- module CritSound loaded|r",0,0,1);
-		if WATDBMCSCO_Mode == nil then
-			WATDBMCSCO_Mode = "SELF"
+		if IKMDBMCSCO_Mode == nil then
+			IKMDBMCSCO_Mode = "SELF"
 		end
-		if WATDBMCSSO_Mode == nil then
-			WATDBMCSSO_Mode = L2
+		if IKMDBMCSSO_Mode == nil then
+			IKMDBMCSSO_Mode = L2
+		end
+		if IKMDBMCSCO_Window == nil then
+			IKMDBMCSCO_Window = 1
 		end
 end
 
-function WowAddonTest_CritSound:OnDisable()
+function ImmortalKingsMod_CritSound:OnDisable()
 	-- Disabling modules unregisters all events/hook automatically
 
 end
 
-function WowAddonTest_CritSound:EventManager(self, event, ...)
-print("event critsound")
+function ImmortalKingsMod_CritSound:EventManager(self, event, ...)
 local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
 	if sourceGUID == playerID then
 		if event == "COMBAT_LOG_EVENT_UNFILTERED" then
-			if not WATDBMCS.ChatOutput.Events[eventType] then
+			if not IKMDBMCS.ChatOutput.Events[eventType] then
 				return
 			else	
-				WowAddonTest_CritSound:CRIT_Checker()
+				ImmortalKingsMod_CritSound:CRIT_Checker()
 			end
 		elseif event == "UNIT_PET" then
 			local petID = UnitGUID("pet")		
@@ -59,7 +60,7 @@ local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurr
 	end
 end
 
-function WowAddonTest_CritSound:CRIT_Checker2()
+function ImmortalKingsMod_CritSound:CRIT_Checker2()
 		local timestamp, combatEvent, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags =  CombatLogGetCurrentEventInfo(); -- Those arguments appear for all combat event variants.
 		local eventPrefix, eventSuffix = combatEvent:match("^(.-)_?([^_]*)$");
 		if eventPrefix == "RANGE" or eventPrefix:match("^SPELL") then
@@ -74,12 +75,12 @@ function WowAddonTest_CritSound:CRIT_Checker2()
 		elseif eventPrefix == "SWING" then
 					-- Something dealt damage. The last 9 arguments in ... describe how it was dealt.
 					-- To extract those, we can use the select function:
-						tab = 1
+						IKMDBMCSCO_Window = 1
 						_G["ChatFrame"..tab]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - SWING ("..eventPrefix.."_"..eventSuffix..")");
 						local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = select(select("#", CombatLogGetCurrentEventInfo())-8, CombatLogGetCurrentEventInfo()); -- select("#", ...) returns number of arguments in the vararg expression
 					-- Do something with the damage details ... 	
 		end
-		tab = 1
+		IKMDBMCSCO_Window = 1
 		print("critical: "..critical.." amount: "..amount);
 						
 		if critical and amount >= 1 then
@@ -95,7 +96,7 @@ function WowAddonTest_CritSound:CRIT_Checker2()
 
 end
 
-function WowAddonTest_CritSound:CRIT_Checker()
+function ImmortalKingsMod_CritSound:CRIT_Checker()
 	local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
 	
 	if (eventType == "RANGE_DAMAGE") or (eventType == "SPELL_DAMAGE") or (eventType == "SPELL_PERIODIC_DAMAGE") then
@@ -108,19 +109,19 @@ function WowAddonTest_CritSound:CRIT_Checker()
 	end
 	if critical then
 		if amount >= 1 then
-			if WATDBMCS.ChatOutput.State and WATDBMCS.ChatOutput.Events[eventType] then
-				if WATDBMCSCO_Mode == "SELF" then
-					_G["ChatFrame"..tab]:AddMessage(WATDBMCS.ChatOutput.Msg.Color[WATDBMCS.ChatOutput.Msg.Type[eventType]]..WATDBMCS.ChatOutput.Msg.Text[WATDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
+			if IKMDBMCS.ChatOutput.State and IKMDBMCS.ChatOutput.Events[eventType] then
+				if IKMDBMCSCO_Mode == "SELF" then
+					_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
 				else
-					SendChatMessage(WATDBMCS.ChatOutput.Msg.Text[WATDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, WATDBMCSCO_Mode ,nil);
+					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
 				end	
 			end
-			if WATDBMCS.SoundOutput.State then
-				script=PlaySoundFile(WATDB.module.CritSound.ChatOutput.Mode[math.random(1, table.getn(WATDB.module.CritSound.ChatOutput.Mode))], "Dialog");
+			if IKMDBMCS.SoundOutput.State then
+				script=PlaySoundFile(IKMDB.module.CritSound.SoundOutput.Mode[math.random(1, table.getn(IKMDB.module.CritSound.SoundOutput.Mode))], "Dialog");
 			end
 		end
 	end
 end
 
 
-WowAddonTest:RegisterModul(WowAddonTest_CritSound, "enable")
+ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable")
