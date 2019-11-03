@@ -79,11 +79,11 @@ local defaults = {
 					State = true,
 					Path = "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\",
 					BM = {
-						"Interface\\AddOns\\IKM\\Sounds\\CritSounds\\bam.ogg",
+						"Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\bam.ogg",
 					},
 					L2 = { 
-						"Interface\\AddOns\\IKM\\Sounds\\CritSounds\\lineage.ogg",
-						"Interface\\AddOns\\IKM\\Sounds\\CritSounds\\lineage2.ogg"
+						"Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\lineage.ogg",
+						"Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\lineage2.ogg"
 					},
 					
 				},	
@@ -130,6 +130,7 @@ function ImmortalKingsMod:OnInitialize()
 		self.db = LibStub("AceDB-3.0"):New("ImmortalKingsModDB", defaults, true)
 		IKMDB = self.db.profile
 		IKMDBMCS = self.db.profile.module.CritSound
+		--IKMDBMRK = self.db.profile.module.CritSound
 		IKMDB.module.CritSound.SoundOutput.Mode = self.db.profile.module.CritSound.SoundOutput.L2
 		--local IKMDB = ImmortalKingsMod.Database
 		--kann die function aus der db.lua laden
@@ -182,7 +183,7 @@ function ImmortalKingsMod:ChatCommand(input)
         return;
     end
 
-    -- /questie toggle
+    -- /ikm mo (module on/off)
     if cmd[1] == "mo" and cmd[2] == "cs" then
 		if cmd[3] == "on" then
 			if not IKMDBMCS.State then
@@ -226,7 +227,8 @@ function ImmortalKingsMod:ChatCommand(input)
 			return;
 	end
 
-	    -- /questie toggle
+	-- /questie toggle
+	if IKMDBMCS.State then
 	  if cmd[1] == "cs" and cmd[2] == "co" and cmd[3] then
 			IKMDBMCSCO_Window = cmd[3]	
 			if  (_G["ChatFrame"..IKMDBMCSCO_Window]:IsVisible() == false) then
@@ -253,6 +255,7 @@ function ImmortalKingsMod:ChatCommand(input)
 			print("/ikm cs co       (Für den ChatOutput):")
 			print("/ikm cs so       (Für den SoundOutput):")
 			return;
+	end
 	end
 			
 			
