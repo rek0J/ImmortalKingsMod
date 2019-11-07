@@ -1,5 +1,7 @@
 local AddOnName, IKMEngine = ...
 IKMEngine[1] = { }
+IKMEngine[2] = { } -- Module
+local ModulDB = IKMEngine[2]
 
 -- Erstelle das Addon
 ImmortalKingsMod = LibStub("AceAddon-3.0"):NewAddon("ImmortalKingsMod", "AceConsole-3.0", "AceEvent-3.0" );
@@ -9,7 +11,7 @@ ImmortalKingsMod = ImmortalKingsMod
 -- Module sind am anfang immer aus
 ImmortalKingsMod:SetDefaultModuleState(false)
 
--- Prifile DB (self.db.profile.)
+-- ImmortalKingsMod Datenbank (self.db)
 local defaults = {
 	-- self.db.profile
 	profile = { 
@@ -175,95 +177,129 @@ function ImmortalKingsMod:ChatCommand(input)
 
     -- /war help || /IKM ?
     if cmd[1] == "help" or cmd[1] == "?" then
-        print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Help Menu");
+        print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Hilfe Menue");
         print("/ikm           (Open the IKM Options)");
-        print("/ikm mo      (Module Menu)");
-        print("/ikm cs       (CritSound Menu)");
-        --print("/ikm rk       (SoundOutput Menu)");
+        print("/ikm mo      (Module Menue)");
+		for n in pairs(ModulDB) do 
+			for k,v in pairs(ModulDB[n]) do 
+				if k == "State" and v == "enable" then
+					for k,v in pairs(ModulDB[n]) do
+						if k == "Chat" and v == cmd[2] then
+							print("/ikm "..v.. "       ("..ModulDB[n].NameS.." Menue):")
+						end
+					end
+				end
+			end
+		end
         return;
     end
 
-    -- /ikm mo (module on/off)
-    if cmd[1] == "mo" and cmd[2] == "cs" then
-		if cmd[3] == "on" then
-			if not IKMDBMCS.State then
-				IKMDBMCS.State = true;
-				print("Das Modul CritSound wurde Aktiviert.")
-			else
-				print("Das Modul ist bereits Aktiv.")
+    -- /ikm mo xx (module on/off)
+	if cmd[1] == "mo" and cmd[2] then
+		for n in pairs(ModulDB) do
+			for k,v in pairs(ModulDB[n]) do 
+				--print("key: "..k.." value: "..v)
+				if k == "Chat" and v == cmd[2] then
+					if cmd[3] == "on" then
+						if ModulDB[n].State == "disable" then
+							ModulDB[n].State = "enable";
+							print("Das Modul "..ModulDB[n].NameS.." wurde Aktiviert.")
+							print("ChatCommand: '/ikm "..v.."' wurde hinzugefügt.")
+						else
+							print("Das Modul "..ModulDB[n].NameS.." ist bereits Aktiv.")
+						end
+						return;
+					elseif cmd[3] == "off" then
+						if ModulDB[n].State == "enable" then
+							ModulDB[n].State = "disable";
+							print("Das Modul "..ModulDB[n].NameS.." wurde Deaktiviert.")
+						else
+							print("Das Modul "..ModulDB[n].NameS.." ist bereits Deaktiviert.")
+						end
+						return;
+					else
+						print("Das Modul "..ModulDB[n].NameS.." ist "..ModulDB[n].State)
+					end
+				end
 			end
-			return;
-		elseif cmd[3] == "off" then
-			if IKMDBMCS.State then
-				IKMDBMCS.State = false;
-				print("Das Modul CritSound wurde Deaktiviert.")
-			else
-				print("Das Modul ist bereits Deaktiviert.")
-			end
-			return;
-		end
-	elseif cmd[1] == "mo" and cmd[2] == "rk" then
-		if cmd[3] == "on" then	
-			if not IKMDBMRK.State then
-				IKMDBMRK.State = true;
-				print("Das Modul RaidBossKill wurde Aktiviert.")
-			else
-				print("Das Modul ist bereits Aktiv.")
-			end
-			return;
-		elseif cmd[3] == "off" then
-			if IKMDBMRK.State then
-				IKMDBMRK.State = false;
-				print("Das Modul RaidBossKill wurde Deaktiviert.")
-			else
-				print("Das Modul ist bereits Deaktiviert.")
-			end
-			return;
 		end
 	elseif cmd[1] == "mo" then
-			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Module Menue")
-			print("/ikm mo cs <on/off>      (Für den CritSound):")
-			print("/ikm mo rk <on/off>      (Für den RaidKillCheck):")
-			return;
+		print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Module Menue")
+		for n in pairs(ModulDB) do
+			for k,v in pairs(ModulDB[n]) do
+				if k == "State" and v == "enable" then
+					for k,v in pairs(ModulDB[n]) do
+						if k == "Chat" then
+							print("/ikm mo "..v.. " <on/off>      (Fuer den "..ModulDB[n].NameS.."):")
+						end
+					end
+				end
+			end
+		end
+	end
+		
+	-- /questie toggle
+	for n in pairs(ModulDB) do 
+		for k,v in pairs(ModulDB[n]) do 
+			if k == "State" and v == "enable" then
+				for k,v in pairs(ModulDB[n]) do
+					if k == "Chat" and v == cmd[1] then
+						if cmd[2] == "co" and cmd[3] == "ch" and cmd[4] then
+							local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(cmd[4])
+							if name and name == "" then
+								print("Der Channel mit der Nummer "..cmd[4].." wurde nicht gefunden")
+							else
+								IKMDBMCSCO_Window = cmd[4]	
+								if  (_G["ChatFrame"..IKMDBMCSCO_Window]:IsVisible() == false) then
+									local frame = FCF_DockFrame(_G["ChatFrame"..IKMDBMCSCO_Window], IKMDBMCSCO_Window)
+								end
+								print("die Crits werden nun im Chatfenster: "..cmd[4].." ("..name..") angezeigt.")	
+							end	
+						elseif cmd[2] == "co" and cmd[3] == "cf" then 
+							for i = 1, 10 do
+								local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(i)
+								if name and name == "" then
+									break	
+								else
+									_G["ChatFrame"..i]:AddMessage("Gib das Chatfenster ein in dem die Crits angezeigt werden sollen. (/ikm cs co ch <number>)")
+									_G["ChatFrame"..i]:AddMessage("Chatfenster: "..i)
+								end	
+							end
+						elseif cmd[2] == "co" then
+							print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound ChatOuutput Menue")
+							print("/ikm cs co cf      (lasse dir die Fensternummern anzeigen):")
+							print("/ikm cs co ch      (im welchen fenster sollen die crits angezeigt werden):")
+							return; 	
+						elseif cmd[2] == "so" and cmd[3] == "l2" then
+							IKMDB.module.CritSound.SoundOutput.Mode = self.db.profile.module.CritSound.SoundOutput.L2
+							print("SoundOutput - Lineage 2 CritSound ist nun Aktiv")
+						elseif cmd[2] == "so" and cmd[3] == "bm" then
+							IKMDB.module.CritSound.SoundOutput.Mode = self.db.profile.module.CritSound.SoundOutput.BM
+							print("SoundOutput - BamMod CritSound ist nun Aktiv")
+						elseif cmd[2] == "so" and not cmd[3] then
+							print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound SoundOutput Menue")
+							print("/ikm cs so l2      (Für den Lineage2 CritSound):")
+							print("/ikm cs so bm      (Für den BamMod CritSound):")
+							return;
+						else
+							print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound Menue")
+							print("/ikm cs co       (Für den ChatOutput):")
+							print("/ikm cs so       (Für den SoundOutput):")
+							return;
+						end	
+					end
+				end
+			end
+		end
 	end
 
-	-- /questie toggle
-	if IKMDBMCS.State then
-	  if cmd[1] == "cs" and cmd[2] == "co" and cmd[3] then
-			IKMDBMCSCO_Window = cmd[3]	
-			if  (_G["ChatFrame"..IKMDBMCSCO_Window]:IsVisible() == false) then
-				local frame = FCF_DockFrame(_G["ChatFrame"..IKMDBMCSCO_Window], IKMDBMCSCO_Window)
-			end		
-	elseif cmd[1] == "cs" and cmd[2] == "co" then 
-				for i = 1, 10 do
-					tabb = i
-					_G["ChatFrame"..tabb]:AddMessage("Gib das Chatfenster ein in dem die Crits angezeigt werden sollen.")
-					_G["ChatFrame"..tabb]:AddMessage("Chatfenster: "..i)
-				end		
-	elseif cmd[1] == "cs" and cmd[2] == "so" and cmd[3] == "l2" then
-			IKMDB.module.CritSound.SoundOutput.Mode = self.db.profile.module.CritSound.SoundOutput.L2
-			print("SoundOutput - Lineage 2 CritSound ist nun Aktiv")
-	elseif cmd[1] == "cs" and cmd[2] == "so" and cmd[3] == "bm" then
-			IKMDB.module.CritSound.SoundOutput.Mode = self.db.profile.module.CritSound.SoundOutput.BM
-			print("SoundOutput - BamMod CritSound ist nun Aktiv")
-	elseif cmd[1] == "cs" and cmd[2] == "so" then
-			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound SoundOutput Menue")
-			print("/ikm cs so l2      (Für den Lineage2 CritSound):")
-			print("/ikm cs so bm      (Für den BamMod CritSound):")
-	elseif cmd[1] == "cs" then
-			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound Menue")
-			print("/ikm cs co       (Für den ChatOutput):")
-			print("/ikm cs so       (Für den SoundOutput):")
-			return;
-	end
-	end
 			
 			
     if cmd[1] == "reload" then
          print(test7);
         return
     end
-
+	
 end
 
 
@@ -274,23 +310,29 @@ function _IKM(input)
 end
 
 
-function ImmortalKingsMod:RegisterModul(nameofmodul, value)
-	IKMEngine[nameofmodul] = value;
+function ImmortalKingsMod:RegisterModul(nameofmodul, value, chco, shortcut)
+	ModulDB[nameofmodul] = {};
+	ModulDB[nameofmodul].Name = nameofmodul;
+	ModulDB[nameofmodul].State = value;
+	ModulDB[nameofmodul].Chat = chco;
+	ModulDB[nameofmodul].NameS = shortcut;
 end
 
 
 function ImmortalKingsMod:LoadModul()
-	for k,v in pairs(IKMEngine) do 
-		--print(k,v)
-		Mname = k 
-		if v == "enable" then
-			print(Mname)
-			Mname:Enable()
-			print("ist aktiv")
-		elseif v == "disable" then
-			print(Mname)
-			Mname:Enable()
-			print("ist nicht aktiv")
+	for n in pairs(ModulDB) do 
+		local MName = n
+		for k,v in pairs(ModulDB[n]) do 
+			--print("key: "..k.." value: "..v)
+			if k == "State" and v == "enable" then
+				print(MName)
+				MName:Enable()
+				print("ist aktiv")
+			elseif k == "State" and v == "disable" then
+				print(MName)
+				MName:Disable()
+				print("ist nicht aktiv")
+			end
 		end
 	end
 end

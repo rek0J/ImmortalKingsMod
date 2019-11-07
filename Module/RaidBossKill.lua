@@ -54,4 +54,4 @@ end
 
 
 
-ImmortalKingsMod:RegisterModul(ImmortalKingsMod_RaidBossKill, "enable")
+ImmortalKingsMod:RegisterModul(ImmortalKingsMod_RaidBossKill, "enable", "rb", "RaidBossKill")

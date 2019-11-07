@@ -124,4 +124,4 @@ function ImmortalKingsMod_CritSound:CRIT_Checker()
 end
 
 
-ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable")
+ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable", "cs", "CritSound")
