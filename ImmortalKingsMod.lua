@@ -2,7 +2,7 @@ local AddOnName, IKMEngine = ...
 IKMEngine[1] = { }
 IKMEngine[2] = { } -- Module
 local ModulDB = IKMEngine[2]
-
+local ModulDBCS = ModulDB[ImmortalKingsMod_CritSound]
 -- Erstelle das Addon
 ImmortalKingsMod = LibStub("AceAddon-3.0"):NewAddon("ImmortalKingsMod", "AceConsole-3.0", "AceEvent-3.0" );
 ImmortalKingsMod = ImmortalKingsMod
@@ -30,8 +30,6 @@ local defaults = {
 						RANGE_DAMAGE = true,
 						SPELL_DAMAGE = true,
 						SPELL_PERIODIC_DAMAGE = true,
-						DAMAGE_SHIELD = true,
-						DAMAGE_SPLIT = true,
 						SPELL_EXTRA_ATTACKS = true,
 						SPELL_HEAL = true,
 						SPELL_PERIODIC_HEAL = true
@@ -44,13 +42,11 @@ local defaults = {
 						Type = {
 							SWING_DAMAGE = 1, 
 							RANGE_DAMAGE = 2, 
-							SPELL_DAMAGE = 2,
-							SPELL_HEAL = 3, 
-							SPELL_PERIODIC_DAMAGE = 4,
-							SPELL_PERIODIC_HEAL = 5, 
-							DAMAGE_SPLIT = 6, 
+							SPELL_DAMAGE = 3,
+							SPELL_HEAL = 4, 
+							SPELL_PERIODIC_DAMAGE = 5,
+							SPELL_PERIODIC_HEAL = 6, 
 							SPELL_EXTRA_ATTACKS = 7,
-							DAMAGE_SHIELD = 8,
 						},
 						-- self.db.profile.module.CritSound.ChatOutput.Msg.Color
 						Color = { 
@@ -66,13 +62,12 @@ local defaults = {
 						-- self.db.profile.module.CritSound.ChatOutput.Msg.Text
 						Text = { 
 							"[CRITICAL HIT]",
+							"[CRITICAL RANGE HIT]",
 							"[CRITICAL SPELL]", 
 							"[CRITICAL HEAL]", 
 							"[CRITICAL DOT]", 
 							"[CRITICAL HOT]", 
-							"[CRITICAL SPLIT]", 
 							"[CRITICAL FURY HIT]", 
-							"[CRITICAL SHIELD HIT]",
 						},
 					},
 				},
@@ -166,6 +161,7 @@ function ImmortalKingsMod:OnDisable()
 end
 
 -- Show the GUI if no input is supplied, otherwise handle the chat input.
+
 function ImmortalKingsMod:ChatCommand(input)
 	local cmd = { }
 	for c in string.gmatch(input, "[^ ]+") do
@@ -178,16 +174,12 @@ function ImmortalKingsMod:ChatCommand(input)
     -- /war help || /IKM ?
     if cmd[1] == "help" or cmd[1] == "?" then
         print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Hilfe Menue");
-        print("/ikm           (Open the IKM Options)");
-        print("/ikm mo      (Module Menue)");
+        print("/ikm               (Open the IKM Options)");
+        print("/ikm mo          (Module Menue)");
 		for n in pairs(ModulDB) do 
 			for k,v in pairs(ModulDB[n]) do 
 				if k == "State" and v == "enable" then
-					for k,v in pairs(ModulDB[n]) do
-						if k == "Chat" and v == cmd[2] then
-							print("/ikm "..v.. "       ("..ModulDB[n].NameS.." Menue):")
-						end
-					end
+					print("/ikm "..ModulDB[n].Chat.. "       ("..ModulDB[n].NameS.." Menue):")	
 				end
 			end
 		end
@@ -230,7 +222,7 @@ function ImmortalKingsMod:ChatCommand(input)
 				if k == "State" and v == "enable" then
 					for k,v in pairs(ModulDB[n]) do
 						if k == "Chat" then
-							print("/ikm mo "..v.. " <on/off>      (Fuer den "..ModulDB[n].NameS.."):")
+							print("/ikm mo "..v.. " <on/off>         (Fuer den "..ModulDB[n].NameS.."):")
 						end
 					end
 				end
@@ -253,8 +245,9 @@ function ImmortalKingsMod:ChatCommand(input)
 								if  (_G["ChatFrame"..IKMDBMCSCO_Window]:IsVisible() == false) then
 									local frame = FCF_DockFrame(_G["ChatFrame"..IKMDBMCSCO_Window], IKMDBMCSCO_Window)
 								end
-								print("die Crits werden nun im Chatfenster: "..cmd[4].." ("..name..") angezeigt.")	
-							end	
+								print("die Crits werden nun im Chatfenster: "..cmd[4].." ("..name..") angezeigt.")
+								break
+							end
 						elseif cmd[2] == "co" and cmd[3] == "cf" then 
 							for i = 1, 10 do
 								local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(i)
@@ -263,6 +256,9 @@ function ImmortalKingsMod:ChatCommand(input)
 								else
 									_G["ChatFrame"..i]:AddMessage("Gib das Chatfenster ein in dem die Crits angezeigt werden sollen. (/ikm cs co ch <number>)")
 									_G["ChatFrame"..i]:AddMessage("Chatfenster: "..i)
+									if i == 10 then
+										return
+									end
 								end	
 							end
 						elseif cmd[2] == "co" then
@@ -289,6 +285,7 @@ function ImmortalKingsMod:ChatCommand(input)
 						end	
 					end
 				end
+			else 
 			end
 		end
 	end
@@ -325,13 +322,11 @@ function ImmortalKingsMod:LoadModul()
 		for k,v in pairs(ModulDB[n]) do 
 			--print("key: "..k.." value: "..v)
 			if k == "State" and v == "enable" then
-				print(MName)
 				MName:Enable()
-				print("ist aktiv")
+				DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff - modul "..ModulDB[n].NameS.." loaded|r",0,0,1);
 			elseif k == "State" and v == "disable" then
-				print(MName)
 				MName:Disable()
-				print("ist nicht aktiv")
+				DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff - modul "..ModulDB[n].NameS.." nicht aktiv|r",0,0,1);
 			end
 		end
 	end

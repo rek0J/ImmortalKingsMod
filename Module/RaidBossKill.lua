@@ -1,4 +1,8 @@
 local AddOnName, IKMEngine = ...
+IKMEngine[1] = { }
+IKMEngine[2] = { } -- Module
+local ModulDB = IKMEngine[2]
+local ModulDBRB = ModulDB[ImmortalKingsMod_RaidBossKill]
 
 local ImmortalKingsModRBK_Bosse = {
 "Botschafter Flammenschlag",
@@ -13,7 +17,6 @@ ImmortalKingsMod_RaidBossKill = ImmortalKingsMod:NewModule("RaidBossKill", "AceE
 ImmortalKingsMod_RaidBossKill.description = "Adds a Sound to each Crit."
 
 function ImmortalKingsMod_RaidBossKill:OnEnable()
-	DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff- module RaidBossKill loaded|r",0,0,1);
 end
 
 function ImmortalKingsMod_RaidBossKill:OnDisable()
@@ -52,6 +55,14 @@ function ImmortalKingsMod_RaidBossKill:RBK_Checker()
 end
 
 
+local function Check()
+	if not ModulDB[self] or ModulDBCS.State == "enable"  then
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_RaidBossKill, "disable", "rb", "RaidBossKill")
+	elseif ModulDBCS.State == "disable" then
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_RaidBossKill, "disable", "rb", "RaidBossKill")
+	end
+end
 
 
-ImmortalKingsMod:RegisterModul(ImmortalKingsMod_RaidBossKill, "enable", "rb", "RaidBossKill")
+Check()
+

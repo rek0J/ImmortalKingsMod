@@ -1,5 +1,8 @@
 local AddOnName, IKMEngine = ...
-
+IKMEngine[1] = { }
+IKMEngine[2] = { } -- Module
+local ModulDB = IKMEngine[2]
+local ModulDBCS = ModulDB[ImmortalKingsMod_CritSound]
 -- Author      : rek0
 -- Create Date : 10/24/2019 11:00:38 PM
 
@@ -25,9 +28,9 @@ local playerID = UnitGUID("player")
 
 
 function ImmortalKingsMod_CritSound:OnEnable()
-		print("modul critsound aktiviert123")
-		ImmortalKingsXMLFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-		ImmortalKingsXMLFrame:RegisterEvent("UNIT_PET", "player")
+		--ImmortalKingsXMLFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+		
+		--ImmortalKingsXMLFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 		--DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff- module CritSound loaded|r",0,0,1);
 		if IKMDBMCSCO_Mode == nil then
 			IKMDBMCSCO_Mode = "SELF"
@@ -45,52 +48,42 @@ function ImmortalKingsMod_CritSound:OnDisable()
 
 end
 
-function ImmortalKingsMod_CritSound:EventManager(self, event, ...)
-local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
-	if sourceGUID == playerID then
-		if event == "COMBAT_LOG_EVENT_UNFILTERED" then
-			if not IKMDBMCS.ChatOutput.Events[eventType] then
-				return
-			else	
-				ImmortalKingsMod_CritSound:CRIT_Checker()
-			end
-		elseif event == "UNIT_PET" then
-			local petID = UnitGUID("pet")		
-		end
-	end
-end
-
 function ImmortalKingsMod_CritSound:CRIT_Checker2()
-		local timestamp, combatEvent, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags =  CombatLogGetCurrentEventInfo(); -- Those arguments appear for all combat event variants.
-		local eventPrefix, eventSuffix = combatEvent:match("^(.-)_?([^_]*)$");
+		local timestamp, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags =  CombatLogGetCurrentEventInfo(); -- Those arguments appear for all combat event variants.
+		local eventPrefix, eventSuffix = eventType:match("^(.-)_?([^_]*)$");
 		if eventPrefix == "RANGE" or eventPrefix:match("^SPELL") then
 				if eventSuffix == "DAMAGE" or eventSuffix == "PERIODIC_DAMAGE" then
 					-- The first three arguments after destFlags in ... describe the spell or ability dealing damage.
 					-- Extract this data using select as well:
-						local spellId, spellName, spellSchool = select(9, CombatLogGetCurrentEventInfo()); -- Everything from 9th argument in ... onward
+						--spellId, spellName, spellSchool = select(9, CombatLogGetCurrentEventInfo()); -- Everything from 9th argument in ... onward
+						_, spellName, _, amount, _, _, _, _, _, critical, _, _ = select(12, CombatLogGetCurrentEventInfo())
 					-- Do something with the spell details ...
 				elseif eventSuffix == "HEAL" or eventSuffix == "PERIODIC_HEAL" then
-						local _, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
+						_, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
 				end			
 		elseif eventPrefix == "SWING" then
 					-- Something dealt damage. The last 9 arguments in ... describe how it was dealt.
 					-- To extract those, we can use the select function:
-						IKMDBMCSCO_Window = 1
-						_G["ChatFrame"..tab]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - SWING ("..eventPrefix.."_"..eventSuffix..")");
-						local amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = select(select("#", CombatLogGetCurrentEventInfo())-8, CombatLogGetCurrentEventInfo()); -- select("#", ...) returns number of arguments in the vararg expression
+						--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - SWING ("..eventPrefix.."_"..eventSuffix..")");
+						--amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = select(select("#", CombatLogGetCurrentEventInfo())-8, CombatLogGetCurrentEventInfo()); -- select("#", ...) returns number of arguments in the vararg expression
+						amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
+						if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
 					-- Do something with the damage details ... 	
 		end
-		IKMDBMCSCO_Window = 1
-		print("critical: "..critical.." amount: "..amount);
 						
 		if critical and amount >= 1 then
 			
-			_G["ChatFrame"..tab]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - CRIT ERKANNT ");
+			--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - CRIT ERKANNT ");
 						
-				if IKM_CritSound.DB.OutputSetting == "SELF" then
-						_G["ChatFrame"..tab]:AddMessage(hoh1[hoh0[eventType]]..hoh2[hoh0[eventType]]..hoh3[2]..spellName.." - |CFFFFFF01"..amount.."|r")
+				if IKMDBMCSCO_Mode == "SELF" then
+					_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
 				else
-						SendChatMessage(hoh2[hoh0[eventType]]..hoh3[1]..spellName.." - "..amount, IKM_CritSound.DB.OutputSetting ,nil);
+					print("test2")
+					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
+				end
+
+				if IKMDBMCS.SoundOutput.State then
+					script=PlaySoundFile(IKMDB.module.CritSound.SoundOutput.Mode[math.random(1, table.getn(IKMDB.module.CritSound.SoundOutput.Mode))], "Dialog");
 				end
 		end	
 
@@ -99,29 +92,57 @@ end
 function ImmortalKingsMod_CritSound:CRIT_Checker()
 	local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
 	
-	if (eventType == "RANGE_DAMAGE") or (eventType == "SPELL_DAMAGE") or (eventType == "SPELL_PERIODIC_DAMAGE") then
-		_, spellName, _, amount, _, _, _, _, _, critical, _, _ = select(12, CombatLogGetCurrentEventInfo())
-	elseif (eventType == "SWING_DAMAGE") then
-		amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
-		if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
-	elseif (eventType == "SPELL_HEAL") or (eventType == "SPELL_PERIODIC_HEAL") then
-		_, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
-	end
-	if critical then
-		if amount >= 1 then
-			if IKMDBMCS.ChatOutput.State and IKMDBMCS.ChatOutput.Events[eventType] then
-				if IKMDBMCSCO_Mode == "SELF" then
-					_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
-				else
-					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
-				end	
+	if IKMDBMCS.ChatOutput.Events[eventType] then
+		if (eventType == "RANGE_DAMAGE") or (eventType == "SPELL_DAMAGE") or (eventType == "SPELL_PERIODIC_DAMAGE") then
+			_, spellName, _, amount, _, _, _, _, _, critical, _, _ = select(12, CombatLogGetCurrentEventInfo())
+		elseif (eventType == "SWING_DAMAGE") then
+			amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
+			if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
+		elseif (eventType == "SPELL_HEAL") or (eventType == "SPELL_PERIODIC_HEAL") then
+			_, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
+		end
+		
+		if critical then
+			if amount >= 1 then
+				if IKMDBMCS.ChatOutput.State then
+					if IKMDBMCSCO_Mode == "SELF" then
+						_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
+					else
+						SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
+					end	
+				end
+				if IKMDBMCS.SoundOutput.State then
+					script=PlaySoundFile(IKMDB.module.CritSound.SoundOutput.Mode[math.random(1, table.getn(IKMDB.module.CritSound.SoundOutput.Mode))], "Dialog");
+				end
 			end
-			if IKMDBMCS.SoundOutput.State then
-				script=PlaySoundFile(IKMDB.module.CritSound.SoundOutput.Mode[math.random(1, table.getn(IKMDB.module.CritSound.SoundOutput.Mode))], "Dialog");
-			end
+		else
+			return
 		end
 	end
 end
 
+local f = CreateFrame("Frame")
+f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+f:SetScript("OnEvent", function(self, event)
+	local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
+	if sourceGUID == playerID then
+		if event == "COMBAT_LOG_EVENT_UNFILTERED" then
+			if not IKMDBMCS.ChatOutput.Events[eventType] then
+				return
+			else	
+				ImmortalKingsMod_CritSound:CRIT_Checker2()
+			end	
+		end
+	end
+end)
 
-ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable", "cs", "CritSound")
+local function Check()
+	if not ModulDB[self] or ModulDBCS.State == "enable"  then
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable", "cs", "CritSound")
+	elseif ModulDBCS.State == "disable" then
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "disable", "cs", "CritSound")
+	end
+end
+
+
+Check()

@@ -1,6 +1,6 @@
 ## Interface: 80205
 ## Title: ImmortalKingsMod
-## Version: 1.0
+## Version: V0.02-beta
 ## Author: rek0
 # SavedVariables: ImmortalKingsModDB
 
