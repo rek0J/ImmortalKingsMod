@@ -138,7 +138,7 @@ end)
 
 local function Check()
 	if not ModulDB[self] or ModulDBCS.State == "enable"  then
-		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable", "cs", "CritSound")
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "disable", "cs", "CritSound")
 	elseif ModulDBCS.State == "disable" then
 		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "disable", "cs", "CritSound")
 	end
