@@ -121,9 +121,10 @@ local myOptions = {
 
 local playerID = UnitGUID("player");
 
+
 function ImmortalKingsMod:OnInitialize()
 		-- Print a message to the chat frame
-		self:Print("IMMORTAL KING CORE LUA GELADEN 'OnInitialize' ImmortalKingsMod")
+		print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Das AddOn wurde erfolgreich geladen.")
 		self.db = LibStub("AceDB-3.0"):New("ImmortalKingsModDB", defaults, true)
 		IKMDB = self.db.profile
 		IKMDBMCS = self.db.profile.module.CritSound
@@ -290,12 +291,8 @@ function ImmortalKingsMod:ChatCommand(input)
 		end
 	end
 
-			
-			
-    if cmd[1] == "reload" then
-         print(test7);
-        return
-    end
+
+ 
 	
 end
 
@@ -323,7 +320,7 @@ function ImmortalKingsMod:LoadModul()
 			--print("key: "..k.." value: "..v)
 			if k == "State" and v == "enable" then
 				MName:Enable()
-				DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff - modul "..ModulDB[n].NameS.." loaded|r",0,0,1);
+				DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff - modul "..ModulDB[n].NameS.." geladen|r",0,0,1);
 			elseif k == "State" and v == "disable" then
 				MName:Disable()
 				DEFAULT_CHAT_FRAME:AddMessage("|c00ff9d1eIK|c00ff0f4fM|c00ffffff - modul "..ModulDB[n].NameS.." nicht aktiv|r",0,0,1);

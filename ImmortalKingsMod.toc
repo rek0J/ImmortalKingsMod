@@ -1,12 +1,12 @@
 ## Interface: 80205
 ## Title: ImmortalKingsMod
-## Version: V0.02-beta
+## Version: V0.03-beta
 ## Author: rek0
-# SavedVariables: Engine
+# SavedVariables: ImmortalKingsModDB
 
 embeds.xml
 ImmortalKingsMod.lua
 
 #testing
 Module\CritSound.lua
-Module\RaidBossKill.lua
+Module\RaidMod.lua
