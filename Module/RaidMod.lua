@@ -21,7 +21,6 @@ function ImmortalKingsMod_RaidMod:OnEnable()
 f:RegisterEvent("CHAT_MSG_RAID")
 f:RegisterEvent("CHAT_MSG_RAID_LEADER")
 f:RegisterEvent("CHAT_MSG_RAID_WARNING")
-print("onload")
 
 end
 
@@ -32,7 +31,7 @@ function ImmortalKingsMod_RaidMod:OnDisable()
 	f:UnregisterEvent("CHAT_MSG_RAID_WARNING")
 end
 
-function ImmortalKingsMod_RaidMod:EventManager(self, event, ...)
+function EventManager(self, event, ...)
 local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()	
 	if eventType == "UNIT_DIED" then
 		for _, value in pairs(ImmortalKingsModRM_Bosse) do
@@ -42,7 +41,18 @@ local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurr
 			end
 		end
 	end
+    local text, playerName,_,_,_,_,_,_,_ = ...
+    if event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_RAID_WARNING" then
+		if playerName == "Aach-Everlook" or playerName == "Aach" then
+		--if playerName == "Gremnag-Everlook" or playerName == "Gremnag" then
+			if text == "300" then
+				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
+			end
+		end
+    end
 end
+
+f:SetScript("OnEvent", EventManager)
 
 function ImmortalKingsMod_RaidMod:RM_Checker()
 	local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()
@@ -62,24 +72,6 @@ function ImmortalKingsMod_RaidMod:RM_Checker()
  
 
 end
-
-
-local function chkChan(self,event,...)
-print(event)
-    local text, playerName,_,_,_,_,_,_,_ = ...
-    if event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_RAID_WARNING" then
-		--if playerName == "Aach-Everlook" or playerName == "Aach" then
-		print(playerName)
-		if playerName == "Gremnag-Everlook" or playerName == "Gremnag" then
-			if text == "300" then
-			print("sound")
-				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
-			end
-		end
-    end
-end
-
-f:SetScript("OnEvent", chkChan)
 
 local function Check()
 	if not ModulDB[self] or ModulDBRM.State == "enable"  then
