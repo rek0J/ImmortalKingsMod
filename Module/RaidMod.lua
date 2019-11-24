@@ -4,20 +4,6 @@ IKMEngine[2] = { } -- Module
 local ModulDB = IKMEngine[2]
 local ModulDBRM = ModulDB[ImmortalKingsMod_CritSound]
 
-local RaidChatCommandUser = { 
-"Aach",
-"Nahemo",
-'Brooly',
-'Brooly-Everlook',
-"Tjured",
-}
-
-local RaidChatCommand = {
-"test",
-"ruhe",
-"meins",
-}
-
 -- Author      : rek0
 -- Create Date : 10/24/2019 11:00:38 PM
 
