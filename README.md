@@ -8,5 +8,3 @@ ChatCommands:
    - /ikm help/?		(Hilfe)
    - /ikm mo 		(Modul Menü/Hilfe)
    - - /ikm mo modulshortcut <on/off>
-   
-   - /ikm cs			(critsound menü)

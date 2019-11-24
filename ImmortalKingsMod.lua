@@ -11,6 +11,34 @@ ImmortalKingsMod = ImmortalKingsMod
 -- Module sind am anfang immer aus
 ImmortalKingsMod:SetDefaultModuleState(false)
 
+
+local myOptions = {
+  type = "group",
+  args = {
+    enable = {
+      name = "Enable",
+      desc = "Enables / disables the addon",
+      type = "toggle",
+      set = function(info,val) ImmortalKingsMod.enabled = val end,
+      get = function(info) return ImmortalKingsMod.enabled end
+    },
+    CritSound = {
+      name = "CritSound",
+      type = "group",
+      args = {
+		enable = {
+			name = "Enable",
+			desc = "Enables / disables the addon",
+			type = "toggle",
+			set = function(info,val) ImmortalKingsMod.enabled = val end,
+			get = function(info) return ImmortalKingsMod.enabled end
+		},
+        -- more options go here
+      },
+    }
+  }
+}
+
 -- ImmortalKingsMod Datenbank (self.db)
 local defaults = {
 	-- self.db.profile
@@ -89,32 +117,7 @@ local defaults = {
 	},
 }
 
-local myOptions = {
-  type = "group",
-  args = {
-    enable = {
-      name = "Enable",
-      desc = "Enables / disables the addon",
-      type = "toggle",
-      set = function(info,val) ImmortalKingsMod.enabled = val end,
-      get = function(info) return ImmortalKingsMod.enabled end
-    },
-    CritSound = {
-      name = "CritSound",
-      type = "group",
-      args = {
-		enable = {
-			name = "Enable",
-			desc = "Enables / disables the addon",
-			type = "toggle",
-			set = function(info,val) ImmortalKingsMod.enabled = val end,
-			get = function(info) return ImmortalKingsMod.enabled end
-		},
-        -- more options go here
-      },
-    }
-  }
-}
+
 
 
  
@@ -161,7 +164,6 @@ function ImmortalKingsMod:OnDisable()
 		-- Called when the addon is disabled
 end
 
--- Show the GUI if no input is supplied, otherwise handle the chat input.
 
 function ImmortalKingsMod:ChatCommand(input)
 	local cmd = { }

@@ -4,9 +4,18 @@ IKMEngine[2] = { } -- Module
 local ModulDB = IKMEngine[2]
 local ModulDBRM = ModulDB[ImmortalKingsMod_CritSound]
 
-local ImmortalKingsModRM_Bosse = {
-"retg4h",
-"eg5zu4",
+local RaidChatCommandUser = { 
+"Aach",
+"Nahemo",
+'Brooly',
+'Brooly-Everlook',
+"Tjured",
+}
+
+local RaidChatCommand = {
+"test",
+"ruhe",
+"meins",
 }
 
 -- Author      : rek0
@@ -16,12 +25,12 @@ ImmortalKingsMod = LibStub("AceAddon-3.0"):GetAddon("ImmortalKingsMod")
 ImmortalKingsMod_RaidMod = ImmortalKingsMod:NewModule("RaidMod", "AceEvent-3.0", "AceHook-3.0")
 ImmortalKingsMod_RaidMod.description = "Adds a Sound to each Crit."
 local f = CreateFrame("FRAME")
+
 function ImmortalKingsMod_RaidMod:OnEnable()
-
-f:RegisterEvent("CHAT_MSG_RAID")
-f:RegisterEvent("CHAT_MSG_RAID_LEADER")
-f:RegisterEvent("CHAT_MSG_RAID_WARNING")
-
+	f:RegisterEvent("CHAT_MSG_RAID")
+	f:RegisterEvent("CHAT_MSG_RAID_LEADER")
+	f:RegisterEvent("CHAT_MSG_RAID_WARNING")
+	f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") 
 end
 
 function ImmortalKingsMod_RaidMod:OnDisable()
@@ -29,26 +38,33 @@ function ImmortalKingsMod_RaidMod:OnDisable()
 	f:UnregisterEvent("CHAT_MSG_RAID")
 	f:UnregisterEvent("CHAT_MSG_RAID_LEADER")
 	f:UnregisterEvent("CHAT_MSG_RAID_WARNING")
+	f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 function EventManager(self, event, ...)
-local _, eventType, _, sourceGUID, _, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()	
+local _, eventType, _, sourceGUID, raidplayername, _, _, _, destName, _, _ = CombatLogGetCurrentEventInfo()	
 	if eventType == "UNIT_DIED" then
 		for _, value in pairs(ImmortalKingsModRM_Bosse) do
 			if value == destName then
-				print("yo gefunden in value")
 				ImmortalKingsMod_RaidMod:RM_Checker()
 			end
 		end
 	end
     local text, playerName,_,_,_,_,_,_,_ = ...
-    if event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_RAID_WARNING" then
-		if playerName == "Aach-Everlook" or playerName == "Aach" then
+    --if event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_RAID_WARNING" then
+	if event == "CHAT_MSG_RAID_LEADER" or event == "CHAT_MSG_RAID_WARNING" then
+--		if playerName == "Aach-Everlook" or playerName == "Aach" then
 		--if playerName == "Gremnag-Everlook" or playerName == "Gremnag" then
 			if text == "300" then
 				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
+			elseif text == "meins" then
+				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\meins.ogg", "Master", false)
+			elseif text == "test" then
+				print("test")
 			end
-		end
+		--end
+
+
     end
 end
 

@@ -77,8 +77,7 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 						
 				if IKMDBMCSCO_Mode == "SELF" then
 					_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
-				else
-					print("test2")
+				else 
 					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
 				end
 
@@ -138,7 +137,7 @@ end)
 
 local function Check()
 	if not ModulDB[self] or ModulDBCS.State == "enable"  then
-		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "disable", "cs", "CritSound")
+		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "enable", "cs", "CritSound")
 	elseif ModulDBCS.State == "disable" then
 		ImmortalKingsMod:RegisterModul(ImmortalKingsMod_CritSound, "disable", "cs", "CritSound")
 	end
