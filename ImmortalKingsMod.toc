@@ -2,7 +2,7 @@
 ## Title: ImmortalKingsMod
 ## Version: V0.03-beta
 ## Author: rek0
-# SavedVariables: ImmortalKingsModDB
+## SavedVariables: ImmortalKingsModDB
 
 embeds.xml
 ImmortalKingsMod.lua
