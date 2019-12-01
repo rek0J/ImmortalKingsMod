@@ -1,8 +1,5 @@
 local AddOnName, IKMEngine = ...
-IKMEngine[1] = { }
-IKMEngine[2] = { } -- Module
-local ModulDB = IKMEngine[2]
-local ModulDBCS = ModulDB[ImmortalKingsMod_CritSound]
+
 -- Erstelle das Addon
 ImmortalKingsMod = LibStub("AceAddon-3.0"):NewAddon("ImmortalKingsMod", "AceConsole-3.0", "AceEvent-3.0" );
 ImmortalKingsMod = ImmortalKingsMod
@@ -30,8 +27,22 @@ local myOptions = {
 			name = "Enable",
 			desc = "Enables / disables the addon",
 			type = "toggle",
-			set = function(info,val) ImmortalKingsMod.enabled = val end,
-			get = function(info) return ImmortalKingsMod.enabled end
+			set = function(info,val) IKMDBMCS.State = val end,
+			get = function(info) return IKMDBMCS.State end
+		},
+        -- more options go here
+      },
+    },
+	RaidMod = {
+      name = "RaidMod",
+      type = "group",
+      args = {
+		enable = {
+			name = "Enable",
+			desc = "Enables / disables the addon",
+			type = "toggle",
+			set = function(info,val) IKMDBMRM.State = val end,
+			get = function(info) return IKMDBMRM.State end
 		},
         -- more options go here
       },
@@ -137,10 +148,6 @@ local defaults = {
 	},
 }
 
-
-
-
- 
 
 local playerID = UnitGUID("player");
 
