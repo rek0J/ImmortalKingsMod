@@ -59,7 +59,6 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 		end
 						
 		if critical and amount >= 1 then
-			
 			--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - CRIT ERKANNT ");
 						
 				if IKMDBMCS.ChatOutput.Mode == "SELF" or IKMDBMCS.ChatOutput.Mode == "self" then

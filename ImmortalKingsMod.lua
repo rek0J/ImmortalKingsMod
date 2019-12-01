@@ -64,7 +64,8 @@ local defaults = {
 						SPELL_PERIODIC_DAMAGE = true,
 						SPELL_EXTRA_ATTACKS = true,
 						SPELL_HEAL = true,
-						SPELL_PERIODIC_HEAL = true
+						SPELL_PERIODIC_HEAL = true,
+						SWING_EXTRA_ATTACKS = true
 					},
 					-- self.db.profile.module.CritSound.ChatOutput.Type
 					Type = { 
