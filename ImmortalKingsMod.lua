@@ -53,6 +53,7 @@ local defaults = {
 				-- self.db.profile.module.CritSound.ChatOutput
 				ChatOutput = {
 					State = true,
+					Command = "co",
 					Window = 1, 
 					Mode = "SELF",
 					-- self.db.profile.module.CritSound.ChatOutput.Events
@@ -115,6 +116,7 @@ local defaults = {
 				-- self.db.profile.module.CritSound.SoundOutput
 				SoundOutput = {
 					State = true,
+					Command = "so",
 					Mode = BM,
 					Sounds = {
 						OFF = { "" },
@@ -231,8 +233,7 @@ function ImmortalKingsMod:ChatCommand(input)
 	end
 		
 	-- /questie toggle
-	for n in pairs(IKMDBM) do
-		if cmd[2] == IKMDBM[n].Command and cmd[3] == "ch" and cmd[4] then
+		if cmd[1] == "cs" and cmd[2] == "co" and cmd[3] == "ch" and cmd[4] then
 			local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(cmd[4])
 			if name and name == "" then
 				print("Der Channel mit der Nummer "..cmd[4].." wurde nicht gefunden")
@@ -242,9 +243,8 @@ function ImmortalKingsMod:ChatCommand(input)
 					local frame = FCF_DockFrame(_G["ChatFrame"..IKMDBMCS.ChatOutput.Window], IKMDBMCS.ChatOutput.Window)
 				end
 				print("die Crits werden nun im Chatfenster: "..cmd[4].." ("..name..") angezeigt.")
-				break
 			end
-		elseif cmd[2] == "co" and cmd[3] == "cf" then 
+		elseif cmd[1] == "cs" and cmd[2] == "co" and cmd[3] == "cf" then 
 			for i = 1, 10 do
 				local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(i)
 				if name and name == "" then
@@ -257,7 +257,7 @@ function ImmortalKingsMod:ChatCommand(input)
 					end
 				end	
 			end
-		elseif cmd[2] == "co" and cmd[3] == "ty" and cmd[4] then
+		elseif cmd[1] == "cs" and cmd[2] == "co" and cmd[3] == "ty" and cmd[4] then
 			_G["ChatFrame5"]:AddMessage(string.upper(cmd[4]))
 			for t in pairs(IKMDBMCS.ChatOutput.Type) do
 				if cmd[4] == string.lower(t) then
@@ -265,42 +265,39 @@ function ImmortalKingsMod:ChatCommand(input)
 					_G["ChatFrame5"]:AddMessage("Chat Output = "..cmd[4])
 				end
 			end
-		elseif cmd[2] == "co" and cmd[3] == "ty" and not cmd[4] then
+		elseif cmd[1] == "cs" and cmd[2] == "co" and cmd[3] == "ty" and not cmd[4] then
 			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound ChatOutput Type")
 			print("/ikm cs co ty      (self, say, party, guild, raid, yell):")
-		elseif cmd[2] == "co" then
+		elseif cmd[1] == "cs" and cmd[2] == "co" then
 			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound ChatOutput Menue")
 			print("/ikm cs co cf      (lasse dir die Fensternummern anzeigen):")
 			print("/ikm cs co ch      (im welchen fenster sollen die crits angezeigt werden):")
 			return; 	
-		elseif cmd[2] == "so" and cmd[3] then
-			for t in pairs(IKMDBMCS.SoundOutput.Sounds) do
-				if cmd[3] == string.lower(t) then
+		elseif cmd[1] == "cs" and cmd[2] == "so" and cmd[3] then
+			for m, _ in pairs(IKMDBMCS.SoundOutput.Sounds) do
+				if string.lower(m) == cmd[3] then
 					IKMDBMCS.SoundOutput.Mode = string.upper(cmd[3])
 					CritSoundMode = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
+					print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound SoundOutput Menue")
 					_G["ChatFrame1"]:AddMessage("Sound Output = "..cmd[3])
 					_G["ChatFrame1"]:AddMessage(IKMDBMCS.SoundOutput.Mode)
 					script=PlaySoundFile(CritSoundMode[math.random(1, table.getn(CritSoundMode))], "Dialog");
 				end
 			end
-		elseif cmd[2] == "so" and not cmd[3] then
+		elseif cmd[1] == "cs" and cmd[2] == "so" and not cmd[3] then
 			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound SoundOutput Menue")
-			print("/ikm cs so l2      (Für den Lineage2 CritSound):")
-			print("/ikm cs so bm      (Für den BamMod CritSound):")
-			print("/ikm cs so off     (Kein Sound):")
+			_G["ChatFrame1"]:AddMessage("Sound Output = "..IKMDBMCS.SoundOutput.Mode)
 			return;
-		else
+		elseif cmd[1] == "cs" and not cmd[2] then
 			print("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - CritSound Menue")
-			print("/ikm cs co       (Für den ChatOutput):")
-			print("/ikm cs so       (Für den SoundOutput):")
+			print("/ikm cs co")
+			print("/ikm cs so")
 			return;
 		end	
 	end
 
 
- 
-	
-end
+
 
 function _IKM(input)
 		_G["ChatFrame1"]:AddMessage(input)
