@@ -31,6 +31,7 @@ local myOptions = {
 			get = function(info) return IKMDBMCS.State end
 		},
         -- more options go here
+
       },
     },
 	RaidMod = {
@@ -143,6 +144,7 @@ local defaults = {
 				State = true,
 				Name = "Raid Mod",
 				Command = "rm",
+				AutoAhu = true,
 			},
 		},
 	},

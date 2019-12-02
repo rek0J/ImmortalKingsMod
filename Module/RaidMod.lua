@@ -23,6 +23,7 @@ end
 
 function ImmortalKingsMod_RaidMod:OnEnable()
 	f:RegisterEvent("CHAT_MSG_RAID")
+	f:RegisterEvent("CHAT_MSG_YELL")
 	f:RegisterEvent("CHAT_MSG_RAID_LEADER")
 	f:RegisterEvent("CHAT_MSG_RAID_WARNING")
 end
@@ -30,6 +31,7 @@ end
 function ImmortalKingsMod_RaidMod:OnDisable()
 	-- Disabling modules unregisters all events/hook automatically
 	f:UnregisterEvent("CHAT_MSG_RAID")
+	f:UnregisterEvent("CHAT_MSG_YELL")
 	f:UnregisterEvent("CHAT_MSG_RAID_LEADER")
 	f:UnregisterEvent("CHAT_MSG_RAID_WARNING")
 end
@@ -48,10 +50,16 @@ function EventManager(self, event, ...)
 			elseif text == "test" then
 				print("test")
 			end
-		--end
-
-
-    end
+    elseif IKMDBMRM.AutoAhu then 
+		if event == "CHAT_MSG_YELL" then
+			if playerName == "Aach-Everlook" or playerName == "Aach" then
+				if text:match("B D K - Was ist euer Handwerk ????") then
+					script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
+					C_Timer.After(3, function() SendChatMessage("kk", "YELL") end)
+				end
+			end
+		end
+	end
 end
 
 f:SetScript("OnEvent", EventManager)
