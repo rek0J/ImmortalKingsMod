@@ -13,6 +13,8 @@ local UnitGUID = UnitGUID
 local playerID = UnitGUID("player")
 
 
+
+
 local function Check()
 	if IKMDBMCS.State then
 		ImmortalKingsMod_CritSound:Enable()
@@ -24,11 +26,13 @@ local function Check()
 end
 
 function ImmortalKingsMod_CritSound:OnInitialize()
+	
+	
 	Check()
 end
 
 function ImmortalKingsMod_CritSound:OnEnable()
-	f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED") 
+	f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 end
 
 function ImmortalKingsMod_CritSound:OnDisable()
@@ -63,6 +67,8 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 						
 				if IKMDBMCS.ChatOutput.Mode == "SELF" or IKMDBMCS.ChatOutput.Mode == "self" then
 					_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
+				elseif IKMDBMCS.ChatOutput.Mode == "OFF" then
+					return
 				else 
 					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCS.ChatOutput.Mode ,nil);
 				end
@@ -93,6 +99,8 @@ function ImmortalKingsMod_CritSound:CRIT_Checker()
 				if IKMDBMCS.ChatOutput.State then
 					if IKMDBMCSCO_Mode == "SELF" then
 						_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
+					elseif IKMDBMCSCO_Mode == "OFF" then
+						return
 					else
 						SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
 					end	

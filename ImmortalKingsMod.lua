@@ -10,45 +10,180 @@ ImmortalKingsMod = ImmortalKingsMod
 
 
 local myOptions = {
-  type = "group",
-  args = {
-    enable = {
-      name = "Enable",
-      desc = "Enables / disables the addon",
-      type = "toggle",
-      set = function(info,val) ImmortalKingsMod.enabled = val end,
-      get = function(info) return ImmortalKingsMod.enabled end
-    },
-    CritSound = {
-      name = "CritSound",
-      type = "group",
-      args = {
-		enable = {
-			name = "Enable",
-			desc = "Enables / disables the addon",
-			type = "toggle",
-			set = function(info,val) IKMDBMCS.State = val end,
-			get = function(info) return IKMDBMCS.State end
-		},
-        -- more options go here
+	type = "group",
+		args = {
+			CritSound = {
+				name = "CritSound",
+				type = "group",
+				args = {
+					header = {
+						name = "CritSound Einstellungen",
+						type = "header",
+						order = 0,
+					},
+					description = {
+						name  = "Spielt einen Sound ab wenn ein Kritischer schlag getroffen wurde.",
+						type = "description",
+						order = 1,
+					},
+					enable = {
+						name = "Aktiviert",
+						desc = "Aktiviere/Deaktiviere die CritSound's",
+						order = 2,
+						type = "toggle",
+						set = function(info,val) IKMDBMCS.State = val end,
+						get = function(info) return IKMDBMCS.State end
+					},
+					chatoutput = {
+						name = "Einstellungen für den Chat Output: ",
+						type = "group",
+						childGroups = "tab",
+						inline = true,
+						order = 3,
+						args = {
+							chatoutputwindow = {
+								name = "In welchem fenster wollen die Crit's erscheinen? (NUR Als Console Output)",
+								type = 'select',
+								style = "radio",
+								values = function() 
+									chatwindowanzeige = { }
+									for i = 1, 10 do
+										local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(i)
+										if name and name == "" then
+											break	
+										else
+											if i ~= 2 then	
+												chatwindowanzeige[i] = name
+											end
+										end
+										if i == 10 then
+											break
+										end		
+									end
+									return chatwindowanzeige
+								end,
+								get = function(info)
+									return IKMDBMCS.ChatOutput.Window
+								end,
+								set = function(info, key)			
+										IKMDBMCS.ChatOutput.Window = key
+										if (_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:IsVisible() == false) then
+											local frame = FCF_DockFrame(_G["ChatFrame"..IKMDBMCS.ChatOutput.Window], IKMDBMCS.ChatOutput.Window)
+										end
+										local name, _, _, _, _, _, _, _, _, _ = GetChatWindowInfo(key)
 
-      },
-    },
-	RaidMod = {
-      name = "RaidMod",
-      type = "group",
-      args = {
-		enable = {
-			name = "Enable",
-			desc = "Enables / disables the addon",
-			type = "toggle",
-			set = function(info,val) IKMDBMRM.State = val end,
-			get = function(info) return IKMDBMRM.State end
+										_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage("Die Crits werden nun im Fenster "..key.." ("..name..") angezeigt.!!")
+								end,
+							},
+							chatoutput = {
+								order = 3,
+								name = "Wie sollen die Crit's ausgegeben werden?",
+								desc = "Aendert den zu hoerenden Crit Sound",
+								type = 'select',
+								style = "radio",
+								values = function() 
+									addoncritoutput = {
+										["SELF"] = "Als Console Output",
+										["SAY"] = "Im /s Chat (say)",
+										["YELL"] = "Im /y Chat (yell)",
+										["PARTY"] = "Im /p Chat (party)",
+										["GUILD"] = "Im /g Chat (guild)",
+										["RAID"] = "Im /ra Chat (raid)",
+										["OFF"] = "Nirgends",
+									}
+									return addoncritoutput
+								end,
+								get = function(info)
+									return IKMDBMCS.ChatOutput.Mode
+								end,
+								set = function(info, key)
+									print(key)
+									IKMDBMCS.ChatOutput.Mode = key
+									if IKMDBMCS.ChatOutput.Mode == "SELF" then
+										_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage("Die Crits werden hier angezeigt!!")
+									elseif IKMDBMCS.ChatOutput.Mode == "OFF" then
+										_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage("Die Crits werden nicht mehr im Chat angezeigt.!!")
+									else 
+										_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage("Die Crits werden nun im "..key.." Chat angezeigt.!!")
+									end
+								end,
+							},
+						},
+					},
+					soundoutput = {
+						name = "Einstellungen für den Sound Output: ",
+						type = "group",
+						inline = true,
+						order = 3,
+						args = {
+							select = {
+								order = 3,
+								name = "Waehle den Sound aus.",
+								desc = "Aendert den zu hoerenden Crit Sound",
+								type = 'select',
+								style = "radio",
+								values = function() 
+									addoncritsounds = {
+										["BM"] = "BamMod Sound",
+										["L2"] = "Lineage 2 Crit",
+										["OFF"] = "Aus",
+									}
+									return addoncritsounds
+								end,
+								get = function(info)
+									return IKMDBMCS.SoundOutput.Mode
+								end,
+								set = function(info, key)
+									IKMDBMCS.SoundOutput.Mode = key
+									CritSoundMode2 = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
+									script=PlaySoundFile(CritSoundMode2[math.random(1, table.getn(CritSoundMode2))], "Dialog");
+								end,
+							},
+						},
+					},
+				},
+			},
+			--RaidMod Settings
+			RaidMod = {
+				name = "RaidMod",
+				type = "group",
+				args = {
+					header = {
+						name = "RaidMod Einstellungen",
+						type = "header",
+						order = 0,
+					},
+					description = {
+						name  = "Diese Modul wurde für die Gilde Immortal Kings geschrieben",
+						type = "description",
+						order = 1,
+					},
+					enable = {
+						name = "Aktiviert",
+						desc = "Aktiviere/Deaktiviere den RaidMod",
+						type = "toggle",
+						order = 2,
+						set = function(info,val) IKMDBMRM.State = val end,
+						get = function(info) return IKMDBMRM.State end
+					},
+					Tabs = {
+						name = "Funktionen: ",
+						type = "group",
+						inline = true,
+						order = 3,
+						args = {
+							autoahu = {
+								name = "Auto Send AHUU",
+								desc = "schreib automatisch AHUU wenn Aach das zeichen dafür gibt",
+								type = "toggle",
+								set = function(info,val) IKMDBMRM.AutoAhu = val end,
+								get = function(info) return IKMDBMRM.AutoAhu end
+							},
+						},
+					},
+				},
+			},
 		},
-        -- more options go here
-      },
-    }
-  }
 }
 
 -- ImmortalKingsMod Datenbank (self.db)
@@ -87,6 +222,7 @@ local defaults = {
 						PARTY = true,
 						GUILD = true,
 						RAID = true,
+						OFF	= true,
 					},
 					-- self.db.profile.module.CritSound.ChatOutput.Msg
 					Msg = { 
@@ -157,7 +293,7 @@ local playerID = UnitGUID("player");
 function ImmortalKingsMod:OnInitialize()
 		-- Print a message to the chat frame
 		_IKM("|c00ff9d1eImmortal Kings |c00ff0f4fMod|r - Das AddOn wurde erfolgreich geladen.")
-
+		
 		self.db = LibStub("AceDB-3.0"):New("ImmortalKingsModDB", defaults, true)
 		IKMDB = self.db.profile
 		IKMDBM = self.db.profile.module
@@ -188,6 +324,7 @@ function ImmortalKingsMod:ChatCommand(input)
 		table.insert(cmd, string.lower(c))
 	end
     if not cmd[1] or cmd[1] == "" then
+		InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
 		InterfaceOptionsFrame_OpenToCategory(self.optionsFrame)
     end
 
