@@ -42,24 +42,19 @@ end
 function ImmortalKingsMod_CritSound:CRIT_Checker2()
 		local timestamp, eventType, sourceGUID, sourceName, sourceFlags, destGUID, destName, destFlags =  CombatLogGetCurrentEventInfo(); -- Those arguments appear for all combat event variants.
 		local eventPrefix, eventSuffix = eventType:match("^(.-)_?([^_]*)$");
-		if eventPrefix == "RANGE" or eventPrefix:match("^SPELL") then
-				if eventSuffix == "DAMAGE" or eventSuffix == "PERIODIC_DAMAGE" then
+		if eventPrefix == "RANGE" or eventPrefix == "SPELL" or eventPrefix == "SPELL_PERIODIC" then
+				if eventSuffix == "DAMAGE" then
 					-- The first three arguments after destFlags in ... describe the spell or ability dealing damage.
 					-- Extract this data using select as well:
 						--spellId, spellName, spellSchool = select(9, CombatLogGetCurrentEventInfo()); -- Everything from 9th argument in ... onward
 						_, spellName, _, amount, _, _, _, _, _, critical, _, _ = select(12, CombatLogGetCurrentEventInfo())
 					-- Do something with the spell details ...
-				elseif eventSuffix == "HEAL" or eventSuffix == "PERIODIC_HEAL" then
+				elseif eventSuffix == "HEAL" then
 						_, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
 				end			
 		elseif eventPrefix == "SWING" then
-					-- Something dealt damage. The last 9 arguments in ... describe how it was dealt.
-					-- To extract those, we can use the select function:
-						--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - SWING ("..eventPrefix.."_"..eventSuffix..")");
-						--amount, overkill, school, resisted, blocked, absorbed, critical, glancing, crushing = select(select("#", CombatLogGetCurrentEventInfo())-8, CombatLogGetCurrentEventInfo()); -- select("#", ...) returns number of arguments in the vararg expression
-						amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
-						if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
-					-- Do something with the damage details ... 	
+				amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
+				if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end	
 		end
 						
 		if critical and amount >= 1 then
@@ -67,9 +62,7 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 						
 				if IKMDBMCS.ChatOutput.Mode == "SELF" or IKMDBMCS.ChatOutput.Mode == "self" then
 					_G["ChatFrame"..IKMDBMCS.ChatOutput.Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
-				elseif IKMDBMCS.ChatOutput.Mode == "OFF" then
-					return
-				else 
+				elseif not IKMDBMCS.ChatOutput.Mode == "OFF" then
 					SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCS.ChatOutput.Mode ,nil);
 				end
 

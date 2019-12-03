@@ -270,6 +270,7 @@ local defaults = {
 					Sounds = {
 						OFF = { "" },
 						BM = { "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\bam.ogg" },
+						HS = { "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\doh.ogg" },
 						L2 = { "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\lineage.ogg", 
 							   "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\lineage2.ogg",
 						},

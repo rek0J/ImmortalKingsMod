@@ -50,12 +50,13 @@ function EventManager(self, event, ...)
 			elseif text == "test" then
 				print("test")
 			end
-    elseif IKMDBMRM.AutoAhu then 
-		if event == "CHAT_MSG_YELL" then
-			if playerName == "Aach-Everlook" or playerName == "Aach" then
+    end
+	if event == "CHAT_MSG_YELL" then
+		if IKMDBMRM.AutoAhu then 
+			if playerName == "Aach-Everlook" or playerName == "Aach" or playerName == "Brooly-Everlook" or playerName == "Brooly" then
 				if text:match("B D K - Was ist euer Handwerk ????") then
 					script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
-					C_Timer.After(3, function() SendChatMessage("kk", "YELL") end)
+					C_Timer.After(3, function() SendChatMessage("AHUU!!", "YELL") end)
 				end
 			end
 		end
