@@ -126,6 +126,7 @@ local myOptions = {
 									addoncritsounds = {
 										["BM"] = "BamMod Sound",
 										["L2"] = "Lineage 2 Crit",
+										["HS"] = "Homer DOH Sound",
 										["OFF"] = "Aus",
 									}
 									return addoncritsounds
