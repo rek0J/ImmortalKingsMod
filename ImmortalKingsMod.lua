@@ -131,14 +131,12 @@ local myOptions = {
 									}
 									return addoncritsounds
 								end,
-								get = function(info)
-									return IKMDBMCS.SoundOutput.Mode
-								end,
 								set = function(info, key)
 									IKMDBMCS.SoundOutput.Mode = key
 									CritSoundMode2 = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
 									script=PlaySoundFile(CritSoundMode2[math.random(1, table.getn(CritSoundMode2))], "Dialog");
 								end,
+								get = function(info) return IKMDBMCS.SoundOutput.Mode end
 							},
 						},
 					},
@@ -177,8 +175,25 @@ local myOptions = {
 								name = "Auto Send AHUU",
 								desc = "schreib automatisch AHUU wenn Aach das zeichen dafür gibt",
 								type = "toggle",
+								order = 1,
 								set = function(info,val) IKMDBMRM.AutoAhu = val end,
 								get = function(info) return IKMDBMRM.AutoAhu end
+							},
+							streammode = {
+								name = "Verstecke Sprechblasen",
+								desc = "zeigt NUR das AHUU an",
+								type = "toggle",
+								order = 3,
+								set = function(info,val) IKMDBMRM.StreamMode = val end,
+								get = function(info) return IKMDBMRM.StreamMode end
+							},
+							ahukevinmode = {
+								name = "AHU KEVIN MODE :D",
+								desc = "gibt 3x \"AHUU!\" wieder",
+								type = "toggle",
+								order = 2,
+								set = function(info,val) IKMDBMRM.AhuKevinMode = val end,
+								get = function(info) return IKMDBMRM.AhuKevinMode end
 							},
 						},
 					},
@@ -276,13 +291,18 @@ local defaults = {
 							   "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\lineage2.ogg",
 						},
 					},
-				},	
+					Toast = true,
+					ToastSound = "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\toasty.ogg",
+				},
+					
 			},
 			RaidMod = {
 				State = true,
 				Name = "Raid Mod",
 				Command = "rm",
 				AutoAhu = true,
+				AhuKevinMode = false,
+				StreamMode = false,
 			},
 		},
 	},

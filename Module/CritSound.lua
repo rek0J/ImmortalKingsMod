@@ -54,9 +54,14 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 				end			
 		elseif eventPrefix == "SWING" then
 				amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
-				if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end	
+				if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
+				if (eventType == "SPELL_EXTRA_ATTACKS") and spellName == "MELEE (OH)" or spellName == "MELEE (MH)" then
+					SPELL_EXTRA_ATTACKS = 8
+				else
+					SPELL_EXTRA_ATTACKS = 7
+				end	
 		end
-						
+				
 		if critical and amount >= 1 then
 			--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - CRIT ERKANNT ");
 						
@@ -67,8 +72,12 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 				end
 
 				if IKMDBMCS.SoundOutput.State then
-					CritSoundMode = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
-					script=PlaySoundFile(CritSoundMode[math.random(1, table.getn(CritSoundMode))], "Dialog");
+					if IKMDBMCS.SoundOutput.Toast and amount >= 3000 then
+						script=PlaySoundFile(IKMDBMCS.SoundOutput.ToastSound, "Dialog");
+					else
+						CritSoundMode = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
+						script=PlaySoundFile(CritSoundMode[math.random(1, table.getn(CritSoundMode))], "Dialog");
+					end
 				end
 		end	
 
@@ -83,6 +92,11 @@ function ImmortalKingsMod_CritSound:CRIT_Checker()
 		elseif (eventType == "SWING_DAMAGE") then
 			amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
 			if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
+			if (eventType == "SPELL_EXTRA_ATTACKS") and spellName == "MELEE (OH)" or spellName == "MELEE (MH)" then
+				SPELL_EXTRA_ATTACKS = 8
+			else
+				SPELL_EXTRA_ATTACKS = 7
+			end
 		elseif (eventType == "SPELL_HEAL") or (eventType == "SPELL_PERIODIC_HEAL") then
 			_, spellName, _, amount, _, _, critical = select(12, CombatLogGetCurrentEventInfo())
 		end
@@ -92,9 +106,7 @@ function ImmortalKingsMod_CritSound:CRIT_Checker()
 				if IKMDBMCS.ChatOutput.State then
 					if IKMDBMCSCO_Mode == "SELF" then
 						_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage(IKMDBMCS.ChatOutput.Msg.Color[IKMDBMCS.ChatOutput.Msg.Type[eventType]]..IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].."|r - "..spellName.." - |CFFFFFF01"..amount.."|r")
-					elseif IKMDBMCSCO_Mode == "OFF" then
-						return
-					else
+					elseif not IKMDBMCSCO_Mode == "OFF" then
 						SendChatMessage(IKMDBMCS.ChatOutput.Msg.Text[IKMDBMCS.ChatOutput.Msg.Type[eventType]].." - "..spellName.." - "..amount, IKMDBMCSCO_Mode ,nil);
 					end	
 				end
