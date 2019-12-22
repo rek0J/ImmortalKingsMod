@@ -54,11 +54,11 @@ function EventManager(self, event, ...)
 	if event == "CHAT_MSG_YELL" then
 		if IKMDBMRM.AutoAhu then 
 			if playerName == "Aach-Everlook" or playerName == "Aach" or playerName == "Brooly-Everlook" or playerName == "Brooly" then
-				if text == "B D K - Was ist euer Handwerk ????" then
+				if text == "I K - Was ist euer Handwerk ????" then
 					script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
 					if IKMDBMRM.StreamMode then
-						SetCVar("chatBubbles", 1)
-						C_Timer.After(6, function() SetCVar("chatBubbles", 0) end)
+						SetCVar("chatBubbles", IKMDBMRM.StreamModeBubble)
+						C_Timer.After(6, function() SetCVar("chatBubbles", IKMDBMRM.StreamModeBubble) end)
 					end
 					C_Timer.After(3, function() SendChatMessage("AHUU!!", "YELL") end)
 					if IKMDBMRM.AhuKevinMode then

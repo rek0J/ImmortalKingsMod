@@ -138,6 +138,23 @@ local myOptions = {
 								end,
 								get = function(info) return IKMDBMCS.SoundOutput.Mode end
 							},
+							toasty = {
+								name = "Toasty Sound",
+								desc = "Aktivieren/Deaktivieren",
+								order = 5,
+								type = "toggle",
+								set = function(info,val) IKMDBMCS.SoundOutput.Toast = val end,
+								get = function(info) return IKMDBMCS.SoundOutput.Toast end
+							},
+							toastydmg = {
+								name = "Toasty Sound",
+								desc = "Aktivieren/Deaktivieren",
+								order = 5,
+								type = "range",
+								min =1, max = 5000, step = 1,
+								set = function(info,val) IKMDBMCS.SoundOutput.ToastDMG = val end,
+								get = function(info) return IKMDBMCS.SoundOutput.ToastDMG end
+							},
 						},
 					},
 				},
@@ -184,7 +201,7 @@ local myOptions = {
 								desc = "zeigt NUR das AHUU an",
 								type = "toggle",
 								order = 3,
-								set = function(info,val) IKMDBMRM.StreamMode = val end,
+								set = function(info,val) IKMDBMRM.StreamMode = val; if IKMDBMRM.StreamMode then IKMDBMRM.StreamModeBubble = 1 else IKMDBMRM.StreamModeBubble = 0 end end,
 								get = function(info) return IKMDBMRM.StreamMode end
 							},
 							ahukevinmode = {
@@ -292,6 +309,7 @@ local defaults = {
 						},
 					},
 					Toast = true,
+					ToastDMG = 3000,
 					ToastSound = "Interface\\AddOns\\ImmortalKingsMod\\Sounds\\CritSounds\\toasty.ogg",
 				},
 					
@@ -303,6 +321,7 @@ local defaults = {
 				AutoAhu = true,
 				AhuKevinMode = false,
 				StreamMode = false,
+				StreamModeBubble = 1,
 			},
 		},
 	},

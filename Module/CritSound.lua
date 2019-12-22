@@ -55,13 +55,22 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 		elseif eventPrefix == "SWING" then
 				amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
 				if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
-				if (eventType == "SPELL_EXTRA_ATTACKS") and spellName == "MELEE (OH)" or spellName == "MELEE (MH)" then
-					SPELL_EXTRA_ATTACKS = 8
+		
+				if eventType == "SPELL_EXTRA_ATTACKS" and (spellName == "MELEE (OH)" or spellName == "MELEE (MH)") then
+					print("INTERNE if abfrage")
+					IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 8
 				else
-					SPELL_EXTRA_ATTACKS = 7
+					IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 7
 				end	
 		end
 				
+		if eventType == "SPELL_EXTRA_ATTACKS" and (spellName == "MELEE (OH)" or spellName == "MELEE (MH)") then
+			print("EXTERNE SPELL EXTRA ATTACK")
+			IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 8
+		else
+			IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 7
+		end	
+	
 		if critical and amount >= 1 then
 			--_G["ChatFrame"..IKMDBMCSCO_Window]:AddMessage("|c00ff9d1eIK|c00ff0f4fM|r - CRIT ERKANNT ");
 						
@@ -72,7 +81,7 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 				end
 
 				if IKMDBMCS.SoundOutput.State then
-					if IKMDBMCS.SoundOutput.Toast and amount >= 3000 then
+					if IKMDBMCS.SoundOutput.Toast and amount >= IKMDBMCS.SoundOutput.ToastDMG then
 						script=PlaySoundFile(IKMDBMCS.SoundOutput.ToastSound, "Dialog");
 					else
 						CritSoundMode = IKMDBMCS.SoundOutput.Sounds[IKMDBMCS.SoundOutput.Mode]
