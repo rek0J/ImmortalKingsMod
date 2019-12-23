@@ -62,8 +62,8 @@ function EventManager(self, event, ...)
 					end
 					C_Timer.After(3, function() SendChatMessage("AHUU!!", "YELL") end)
 					if IKMDBMRM.AhuKevinMode then
-						C_Timer.After(4.3, function() SendChatMessage("AHUU!!", "YELL") end)
-						C_Timer.After(5.3, function() SendChatMessage("AHUU!!", "YELL") end)
+						C_Timer.After(4.2, function() SendChatMessage("AHUU!!", "YELL") end)
+						C_Timer.After(5.2, function() SendChatMessage("AHUU!!", "YELL") end)
 					end
 				end
 			end
