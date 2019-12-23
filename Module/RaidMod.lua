@@ -21,7 +21,6 @@ function ImmortalKingsMod_RaidMod:OnInitialize()
 	Check()
 end
 
-
 function ImmortalKingsMod_RaidMod:OnEnable()
 	f:RegisterEvent("CHAT_MSG_RAID")
 	f:RegisterEvent("CHAT_MSG_YELL")

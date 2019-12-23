@@ -55,17 +55,9 @@ function ImmortalKingsMod_CritSound:CRIT_Checker2()
 		elseif eventPrefix == "SWING" then
 				amount, _, _, _, _, _, critical, _, _, isOffHand = select(12, CombatLogGetCurrentEventInfo())
 				if isOffHand == true then spellName = "MELEE (OH)" else	spellName = "MELEE (MH)" end
-		
-				if eventType == "SPELL_EXTRA_ATTACKS" and (spellName == "MELEE (OH)" or spellName == "MELEE (MH)") then
-					print("INTERNE if abfrage")
-					IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 8
-				else
-					IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 7
-				end	
 		end
 				
 		if eventType == "SPELL_EXTRA_ATTACKS" and (spellName == "MELEE (OH)" or spellName == "MELEE (MH)") then
-			print("EXTERNE SPELL EXTRA ATTACK")
 			IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 8
 		else
 			IKMDBMCS.ChatOutput.Msg.Type.SPELL_EXTRA_ATTACKS = 7
