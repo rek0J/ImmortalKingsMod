@@ -47,9 +47,8 @@ function EventManager(self, event, ...)
 				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\RM.ogg", "Master", false)
 			elseif text == "meins" then
 				script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\meins.ogg", "Master", false)
-			elseif text == "test" then
-				print("test")
 			end
+
     end
 	if event == "CHAT_MSG_YELL" then
 		if IKMDBMRM.AutoAhu then 
@@ -65,6 +64,9 @@ function EventManager(self, event, ...)
 						C_Timer.After(4.2, function() SendChatMessage("AHUU!!", "YELL") end)
 						C_Timer.After(5.2, function() SendChatMessage("AHUU!!", "YELL") end)
 					end
+				end
+				if text == "Fuer IK" then
+					DoEmote("charge","none");
 				end
 			end
 		end
