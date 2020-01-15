@@ -68,7 +68,7 @@ function EventManager(self, event, ...)
 				if text == "Fuer IK" then
 					DoEmote("charge","none");
 				end
-				if text == "IHR WURDET GEWOGEN, IHR WURDET GEMESSEN UND IHR WURDET EINSTIMMIG FÜR NICHT GUT GENUG BEFUNDEN" then
+				if text == "IHR WURDET GEWOGEN, IHR WURDET GEMESSEN UND IHR WURDET EINSTIMMIG FUER NICHT GUT GENUG BEFUNDEN" then
 					script=PlaySoundFile("Interface\\AddOns\\ImmortalKingsMod\\Sounds\\RaidMod\\gewogen.ogg", "Master", false)
 				end
 				if text == "Und jetzt Vollgas" then
